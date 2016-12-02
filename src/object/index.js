@@ -32,7 +32,10 @@ function convertData(objectBody, objectChange) {
     let objectReturn = {};
     keysChange.map(keyChange => {
         let changeOption = objectChange[keyChange];
-        objectReturn[keyChange] = getValueChangeOption(objectBody, keyChange, changeOption);
+        let valueKeyReturn = getValueChangeOption(objectBody, keyChange, changeOption, objectReturn);
+        if(valueKeyReturn !== undefined && valueKeyReturn !== null){
+            objectReturn[keyChange] = valueKeyReturn;
+        }
         return keyChange;
     });
     return objectReturn;
