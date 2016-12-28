@@ -1,20 +1,22 @@
+import {isJsonString} from "../json/index";
 /**
  * Created by Tien Nguyen on 11/29/16.
  */
 /**
- *
+ * Get Value from object
  * @param objectBody
  * @param keyChange
  * @param changeOption
+ * @param objectReturn
  * @returns {*}
  */
-function getValueChangeOption(objectBody, keyChange, changeOption) {
-    const value = objectBody[keyChange] ? objectBody[keyChange] : changeOption.$default;
+function getValueChangeOption(objectBody, keyChange, changeOption, objectReturn) {
+    let value = objectBody[keyChange] ? objectBody[keyChange] : changeOption.$default;
     if (changeOption.$get) {
-        return value;
+        return isJsonString(value) ? JSON.parse(value) : value;
     }
     if (changeOption.$update) {
-        return changeOption.$update(value)
+        return changeOption.$update(value, objectReturn)
     }
     if (changeOption.$set) {
         return changeOption.$set;
@@ -32,7 +34,7 @@ function convertData(objectBody, objectChange) {
     let objectReturn = {};
     keysChange.map(keyChange => {
         let changeOption = objectChange[keyChange];
-        objectReturn[keyChange] = getValueChangeOption(objectBody, keyChange, changeOption);
+        objectReturn[keyChange] = getValueChangeOption(objectBody, keyChange, changeOption, objectReturn);
         return keyChange;
     });
     return objectReturn;
